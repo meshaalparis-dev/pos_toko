@@ -1,472 +1,384 @@
-<?php include './aciont.php'; ?>
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Produk — Admin Panel</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-
+    <title>Daftar Produk — Toko Saya</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #F6F5F2;
             --surface: #FFFFFF;
             --surface-2: #F0EEE9;
-            --border: rgba(0,0,0,0.08);
-            --border-strong: rgba(0,0,0,0.14);
+            --border: rgba(0, 0, 0, 0.08);
+            --border-strong: rgba(0, 0, 0, 0.14);
             --text-primary: #1A1917;
             --text-secondary: #6B6860;
             --text-muted: #A09D98;
             --accent: #1A1917;
             --accent-fg: #FFFFFF;
-            --amber: #B45309;
-            --amber-bg: #FEF3C7;
-            --amber-border: rgba(180,83,9,0.2);
-            --red: #B91C1C;
-            --red-bg: #FEE2E2;
-            --indigo: #4338CA;
-            --indigo-bg: #EEF2FF;
-            --green: #1D6F42;
-            --green-bg: #EAF5EE;
-            --radius-sm: 6px;
-            --radius-md: 10px;
-            --radius-lg: 14px;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --radius-md: 12px;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --primary-blue: #020202;
         }
 
         body.dark {
             --bg: #0F0E0C;
             --surface: #1C1B18;
             --surface-2: #252420;
-            --border: rgba(255,255,255,0.07);
-            --border-strong: rgba(255,255,255,0.12);
+            --border: rgba(255, 255, 255, 0.07);
             --text-primary: #F2F0EB;
             --text-secondary: #A09D98;
-            --text-muted: #6B6860;
             --accent: #F2F0EB;
             --accent-fg: #1A1917;
-            --amber: #FCD34D;
-            --amber-bg: rgba(252,211,77,0.1);
-            --amber-border: rgba(252,211,77,0.2);
-            --red: #F87171;
-            --red-bg: rgba(248,113,113,0.12);
-            --indigo: #818CF8;
-            --indigo-bg: rgba(129,140,248,0.12);
-            --green: #34D399;
-            --green-bg: rgba(52,211,153,0.12);
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
         }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             font-family: 'DM Sans', sans-serif;
             background: var(--bg);
             color: var(--text-primary);
-            min-height: 100vh;
-            transition: background 0.3s, color 0.3s;
+            transition: 0.3s;
         }
 
-        /* ── SIDEBAR ─────────────────────────── */
         .sidebar {
             position: fixed;
-            top: 0; left: 0;
-            width: 240px; height: 100vh;
+            width: 240px;
+            height: 100vh;
             background: var(--surface);
             border-right: 1px solid var(--border);
-            display: flex; flex-direction: column;
+            display: flex;
+            flex-direction: column;
             z-index: 100;
-            transition: background 0.3s, border-color 0.3s;
         }
 
         .sidebar-brand {
-            padding: 24px 20px 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; gap: 10px;
+            padding: 30px 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 18px;
+            letter-spacing: -0.5px;
         }
 
         .brand-icon {
-            width: 32px; height: 32px;
-            border-radius: var(--radius-sm);
-            background: var(--accent);
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .brand-icon svg { width: 16px; height: 16px; fill: var(--accent-fg); }
-        .brand-name { font-size: 15px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.3px; }
-
-        .sidebar-section { padding: 20px 12px 8px; flex: 1; }
-
-        .sidebar-label {
-            font-size: 10px; font-weight: 600;
-            letter-spacing: 0.08em; text-transform: uppercase;
-            color: var(--text-muted); padding: 0 8px; margin-bottom: 6px;
+            width: 32px;
+            height: 32px;
+            background: var(--primary-blue);
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
         }
 
         .nav-item {
-            display: flex; align-items: center; gap: 10px;
-            padding: 9px 10px; border-radius: var(--radius-sm);
-            text-decoration: none; color: var(--text-secondary);
-            font-size: 14px; transition: background 0.15s, color 0.15s;
-            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            transition: 0.2s;
+            border-radius: 0 20px 20px 0;
+            margin-right: 20px;
         }
 
-        .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.7; }
-        .nav-item:hover { background: var(--surface-2); color: var(--text-primary); }
-        .nav-item:hover svg { opacity: 1; }
-        .nav-item.active { background: var(--accent); color: var(--accent-fg); font-weight: 500; }
-        .nav-item.active svg { opacity: 1; fill: var(--accent-fg); }
-
-        .sidebar-footer { padding: 16px 12px; border-top: 1px solid var(--border); }
-
-        .theme-toggle {
-            display: flex; align-items: center; gap: 10px;
-            padding: 9px 10px; border-radius: var(--radius-sm);
-            cursor: pointer; color: var(--text-secondary);
-            font-size: 14px; border: none; background: none; width: 100%;
-            transition: background 0.15s, color 0.15s; font-family: inherit;
+        .nav-item.active {
+            background: #6366f115;
+            color: var(--primary-blue);
+            font-weight: 600;
         }
 
-        .theme-toggle:hover { background: var(--surface-2); color: var(--text-primary); }
-        .theme-toggle svg { width: 16px; height: 16px; flex-shrink: 0; }
-
-        /* ── MAIN ───────────────────────────── */
-        .main { margin-left: 240px; min-height: 100vh; display: flex; flex-direction: column; }
-
-        .topbar {
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            padding: 0 32px; height: 60px;
-            display: flex; align-items: center; justify-content: space-between;
-            position: sticky; top: 0; z-index: 50;
-            transition: background 0.3s, border-color 0.3s;
-        }
-
-        .breadcrumb {
-            display: flex; align-items: center; gap: 6px;
-            font-size: 13px; color: var(--text-muted);
-        }
-
-        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
-        .breadcrumb a:hover { color: var(--text-primary); }
-        .breadcrumb span { color: var(--text-primary); font-weight: 500; }
-
-        .avatar {
-            width: 32px; height: 32px; border-radius: 50%;
-            background: var(--surface-2); border: 1.5px solid var(--border-strong);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 12px; font-weight: 600; color: var(--text-secondary);
-        }
-
-        /* ── CONTENT ────────────────────────── */
-        .content {
-            padding: 36px 32px; flex: 1;
-            display: flex; align-items: flex-start; justify-content: center;
-        }
-
-        .edit-wrap { width: 100%; max-width: 560px; }
-
-        .page-header { margin-bottom: 24px; }
-
-        .page-title {
-            font-size: 22px; font-weight: 600;
-            letter-spacing: -0.5px; color: var(--text-primary); margin-bottom: 4px;
-        }
-
-        .page-subtitle { font-size: 14px; color: var(--text-secondary); }
-
-        /* ── BANNER ─────────────────────────── */
-        .banner {
-            display: flex; align-items: flex-start; gap: 10px;
-            padding: 12px 14px;
-            background: var(--amber-bg); border: 1px solid var(--amber-border);
-            border-radius: var(--radius-md); margin-bottom: 20px;
-        }
-
-        .banner svg { width: 15px; height: 15px; color: var(--amber); flex-shrink: 0; margin-top: 1px; }
-        .banner-text { font-size: 13px; color: var(--amber); line-height: 1.5; }
-        .banner-text strong { font-weight: 600; }
-
-        /* ── FORM CARD ──────────────────────── */
-        .form-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);
-            overflow: hidden; transition: background 0.3s, border-color 0.3s;
-            margin-bottom: 16px;
-        }
-
-        .form-card-header {
-            padding: 18px 20px; border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: space-between;
-        }
-
-        .form-card-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
-
-        .edit-badge {
-            display: inline-flex; align-items: center; gap: 4px;
-            font-size: 11px; font-weight: 600; padding: 3px 10px;
-            border-radius: 100px;
-            background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border);
-        }
-
-        .edit-badge svg { width: 10px; height: 10px; }
-
-        .form-body { padding: 20px; }
-
-        /* ── ORIGINAL ROW ───────────────────── */
-        .original-row {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 10px; margin-bottom: 22px;
-        }
-
-        .original-field {
-            padding: 10px 12px;
+        .nav-item:hover:not(.active) {
+            color: var(--text-primary);
             background: var(--surface-2);
+        }
+
+        .main {
+            margin-left: 240px;
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        /* PAGE HEADER & STATS */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 32px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: var(--radius-md);
             border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
         }
 
-        .original-label {
-            font-size: 10px; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.07em;
-            color: var(--text-muted); margin-bottom: 3px;
+        .stat-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
         }
 
-        .original-value {
-            font-size: 13px; color: var(--text-secondary);
-            font-family: 'DM Mono', monospace;
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
-        /* ── FIELDS ─────────────────────────── */
-        .fields-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 4px; }
-        .field-full { grid-column: 1 / -1; }
-        .field-group { display: flex; flex-direction: column; }
-
-        label {
-            font-size: 11px; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.06em;
-            color: var(--text-secondary); margin-bottom: 6px;
+        /* BUTTONS */
+        .btn-primary {
+            background: var(--accent);
+            color: var(--accent-fg);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .input-wrap { position: relative; }
-
-        .input-wrap svg {
-            position: absolute; left: 11px; top: 50%;
-            transform: translateY(-50%);
-            width: 14px; height: 14px;
-            color: var(--text-muted); pointer-events: none;
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
         }
 
-        .input-prefix {
-            position: absolute; left: 11px; top: 50%;
-            transform: translateY(-50%);
-            font-size: 13px; color: var(--text-muted);
-            pointer-events: none; font-family: 'DM Mono', monospace;
+        /* TABLE CONTAINER */
+        .table-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
         }
 
-        input[type="text"], input[type="number"] {
+        table {
             width: 100%;
-            font-family: 'DM Sans', sans-serif; font-size: 14px;
-            padding: 10px 12px 10px 34px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-strong);
-            background: var(--surface-2); color: var(--text-primary);
-            outline: none;
-            transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+            border-collapse: collapse;
+            text-align: left;
         }
 
-        input.with-prefix { padding-left: 28px; }
-        input[type="text"]::placeholder,
-        input[type="number"]::placeholder { color: var(--text-muted); }
-
-        input[type="text"]:focus,
-        input[type="number"]:focus {
-            border-color: var(--accent); background: var(--surface);
-            box-shadow: 0 0 0 3px rgba(26,25,23,0.08);
+        th {
+            background: var(--surface-2);
+            padding: 16px 24px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
         }
 
-        body.dark input:focus { box-shadow: 0 0 0 3px rgba(242,240,235,0.1); }
-
-        .field-hint { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
-
-        /* ── DIVIDER ────────────────────────── */
-        .divider { height: 1px; background: var(--border); margin: 20px 0; }
-
-        /* ── ACTIONS ────────────────────────── */
-        .form-actions { display: flex; gap: 8px; }
-
-        .btn-save {
-            flex: 1; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
-            padding: 10px 20px; border-radius: var(--radius-sm);
-            background: var(--accent); color: var(--accent-fg);
-            border: none; cursor: pointer; transition: opacity 0.15s;
-            display: flex; align-items: center; justify-content: center; gap: 6px;
+        td {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
         }
 
-        .btn-save:hover { opacity: 0.85; }
-        .btn-save svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-
-        .btn-cancel {
-            font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
-            padding: 10px 16px; border-radius: var(--radius-sm);
-            background: var(--surface-2); color: var(--text-secondary);
-            border: 1px solid var(--border-strong); cursor: pointer;
-            text-decoration: none; display: flex; align-items: center; gap: 6px;
-            transition: background 0.15s, color 0.15s;
+        tr:hover td {
+            background: rgba(0, 0, 0, 0.01);
         }
 
-        .btn-cancel:hover { background: var(--border); color: var(--text-primary); }
-        .btn-cancel svg { width: 14px; height: 14px; }
-
-        /* ── DANGER ZONE ────────────────────── */
-        .danger-zone {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius-lg); overflow: hidden;
-            transition: background 0.3s, border-color 0.3s;
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            background: var(--surface-2);
         }
 
-        .danger-header {
-            padding: 14px 20px; border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; gap: 8px;
+        .price {
+            font-family: 'DM Mono', monospace;
+            font-weight: 500;
         }
 
-        .danger-header svg { width: 14px; height: 14px; color: var(--red); flex-shrink: 0; }
-        .danger-title { font-size: 13px; font-weight: 600; color: var(--red); }
-
-        .danger-body {
-            padding: 16px 20px;
-            display: flex; align-items: center; justify-content: space-between; gap: 16px;
+        .btn-edit {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
         }
 
-        .danger-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
-
-        .btn-danger {
-            font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
-            padding: 8px 14px; border-radius: var(--radius-sm);
-            background: var(--red-bg); color: var(--red);
-            border: none; cursor: pointer; text-decoration: none;
-            white-space: nowrap; transition: opacity 0.15s;
-            display: inline-flex; align-items: center; gap: 5px;
+        .btn-delete {
+            color: #ef4444;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 15px;
         }
 
-        .btn-danger:hover { opacity: 0.75; }
-        .btn-danger svg { width: 12px; height: 12px; }
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
 
-        /* ── SCROLLBAR ─────────────────────── */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+        .theme-btn {
+            width: 100%;
+            padding: 10px;
+            cursor: pointer;
+            background: var(--surface-2);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+        }
     </style>
 </head>
+
 <body>
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
-    <div class="sidebar-brand">
-        <div class="brand-icon">
-            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <rect x="1" y="1" width="6" height="6" rx="1.5"/>
-                <rect x="9" y="1" width="6" height="6" rx="1.5"/>
-                <rect x="1" y="9" width="6" height="6" rx="1.5"/>
-                <rect x="9" y="9" width="6" height="6" rx="1.5"/>
-            </svg>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon"></div>
+            <span class="brand-name">Toko Saya</span>
         </div>
-        <span class="brand-name">toko</span>
-    </div>
+        <nav style="margin-top: 10px;">
+            <a href="index.php" class="nav-item active">
+                <span></span> Produk
+            </a>
+            <a href="../category/index.php" class="nav-item">
+                <span></span> category
+            </a>
+            <a href="../role/index.php" class="nav-item">
+                <span></span> Role
+            </a>
+             <a href="../role/index.php" class="nav-item">
+                <span></span> kastemer
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="theme-btn" onclick="toggleDark()" id="themeBtn"> Mode Gelap</button>
+        </div>
+    </aside>
+<!-- Harus begini -->
 
-    <div class="sidebar-section">
-        <div class="sidebar-label">Menu</div>
+    <main class="main">
+        <div class="page-header">
+            <div>
+                <h1 style="font-size: 28px; letter-spacing: -1px;">Daftar Produk</h1>
 
-        <a href="index.php" class="nav-item active">
-            <svg viewBox="0 0 16 16" fill="currentColor">
-                <path d="M2 2h3v3H2zM2 6.5h3v3H2zM2 11h3v3H2zM6.5 2h7.5v3H6.5zM6.5 6.5h7.5v3H6.5zM6.5 11h7.5v3H6.5z"/>
-            </svg>
-            Produk
-        </a>
+            </div>
+            <a href="insert.php" class="btn-primary">
+                <span>+</span> Tambah Produk
+            </a>
+        </div>
 
-        <a href="../kategori/index.php" class="nav-item">
-            <svg viewBox="0 0 16 16" fill="currentColor">
-                <path d="M1 3a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H2a1 1 0 01-1-1V3zm5.5 0a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H7.5a1 1 0 01-1-1V3zM1 9.5a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H2a1 1 0 01-1-1v-3zm5.5 0a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H7.5a1 1 0 01-1-1v-3z"/>
-            </svg>
-            Kategori
-        </a>
-
-        <a href="../role/insert.php" class="nav-item ">
-            <svg viewBox="0 0 16 16" fill="currentColor">
-                <path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 5a5 5 0 0110 0H3z"/>
-            </svg>
-            Role
       
-   <a href="../role/index.php" class="nav-item ">
-            <svg viewBox="0 0 16 16" fill="currentColor">
-                <path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 5a5 5 0 0110 0H3z"/>
-            </svg>
-            Role
 
-           <a href="../role/edit    .php" class="nav-item ">
-            <svg viewBox="0 0 16 16" fill="currentColor">
-                <path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 5a5 5 0 0110 0H3z"/>
-            </svg>
-            Role
-            
-<table>
-    <thead>
-        <tr>
-            <th>No</th>
-            <th>Nama</th>
-            <th>Harga</th>
-            <th>Kategori</th>
-            <th>Aksi</th>
-        </tr>
-    </thead>
-</table>
-<tbody>
-    <?php $data=readProduk($conn); ?>
-    <?php while ($row = mysqli_fetch_array($data)) {?>
-    <tr>
-        <td><?= $no++ ?></td>
-        <td><?= $row['nama_product'] ?></td>
-        <td><?= $row['harga'] ?></td>
-    </tr>
-    <?php } ?>
-</tbody>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Produk</div>
+                <div class="stat-value">
+                    <?php
+                    include './aciont.php';
+                    $total = readProduk($conn)->num_rows;
+                    echo $total;
+                    ?>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Stok Hampir Habis</div>
+                <div class="stat-value" style="color: #f59e0b;">
+                    <!-- Contoh logika stok rendah < 10 -->
+                    2
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Kategori Aktif</div>
+                <div class="stat-value">5</div>
+            </div>
+        </div>
 
-         <option value="<?= $row['id'] ?>"><?= $row['nama_category'] ?></option>
-            <?php
-            }
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-100">
+                                <th class="px-6 py-4 text-label-md font-label-md text-slate-500 uppercase tracking-wider">No</th>
+                                <th class="px-6 py-4 text-label-md font-label-md text-slate-500 uppercase tracking-wider">Nama Product</th>
+                                <th class="px-6 py-4 text-label-md font-label-md text-slate-500 uppercase tracking-wider">Harga</th>
+                                <th class="px-6 py-4 text-label-md font-label-md text-slate-500 uppercase tracking-wider">Category</th>
+                                <th class="px-6 py-4 text-label-md font-label-md text-slate-500 uppercase tracking-wider">Stok</th>
+                                <th class="px-6 py-4 text-label-md font-label-md text-slate-500 uppercase tracking-wider">Deskripsi</th>
+                                <th class="px-6 py-4 text-label-md font-label-md text-slate-500 uppercase tracking-wider text-right">Image</th>
+                            </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $result = readProduk($conn);
+                    $no = 1;
+                    if ($result->num_rows > 0):
+                        while ($row = $result->fetch_assoc()):
+                    ?>
+                            <tr>
+                                <td style="color: var(--text-muted);"><?= str_pad($no++, 2, '0', STR_PAD_LEFT) ?></td>
 
-            ?>
-        </select>
-        <br>
-        <button type="submit">Tambah</button>
-    </form>
+                                <td><?= htmlspecialchars($row['nama'] ?? '') ?></td> 
 
+                                <td class="price">Rp <?= number_format($row['harga'], 0, ',', '.') ?></td>
 
+                                <td><span class="badge"><?= htmlspecialchars($row['nama_category'] ?? '') ?></span></td> <!-- ✅ 'nama' → 'nama_category' -->
+                               
+                                 <td><span class="badge"><?= htmlspecialchars($row['stok'] ?? '') ?></span></td>
+                                  <td><span class="badge"><?= htmlspecialchars($row['deskripsi'] ?? '') ?></span></td>
+                                <td>
+                                 <td>
+    <?php if (!empty($row['image'])): ?>
+        <img 
+            src="image_produk/<?= $row['image'] ?>" 
+            alt="<?= $row['nama'] ?>"
+            style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;"
+        >
+    <?php else: ?>
+        <span style="color: #ccc;">-</span>
+    <?php endif; ?>
+</td>
+                                <td style="text-align: right; white-space: nowrap;">
+    <a href="edit.php?id=<?= $row['id'] ?>" class="btn-edit">Edit</a>
+    <a href="aciont.php?aksi=delete&id=<?= $row['id'] ?>" class="btn-delete" 
+       onclick="return confirm('Hapus produk ini?')">Hapus</a>
+</td>
+                            </tr>
+                        <?php
+                        endwhile;
+                    else:
+                        ?>
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 60px; color: var(--text-muted);">
+                                <div style="font-size: 40px; margin-bottom: 10px;"></div>
+                                <p>Belum ada data produk yang tersedia.</p>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </main>
 
-                     
-
-<script>
-    function toggleDark() {
-        const dark = document.body.classList.toggle('dark')
-        localStorage.setItem('theme', dark ? 'dark' : 'light')
-        updateThemeBtn(dark)
-    }
-
-    function updateThemeBtn(dark) {
-        document.getElementById('themeLabel').textContent = dark ? 'Mode Terang' : 'Mode Gelap'
-        const icon = document.getElementById('themeIcon')
-        icon.innerHTML = dark
-            ? '<path d="M8 2a6 6 0 100 12A6 6 0 008 2z"/><circle cx="8" cy="8" r="2.5" fill="var(--bg)"/>'
-            : '<path d="M8 1a7 7 0 100 14A7 7 0 008 1zM3 8a5 5 0 019.95-1H3.05A5.002 5.002 0 013 8z"/>'
-    }
-
-    if (localStorage.getItem('theme') === 'dark') {
-        document.body.classList.add('dark')
-        updateThemeBtn(true)
-    }
-</script>
+    
 
 </body>
+
 </html>

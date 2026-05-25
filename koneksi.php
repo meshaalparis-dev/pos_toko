@@ -3,7 +3,7 @@
 $hostname="localhost";
 $username="root";
 $password="";
-$db="pos.toko";
+$db="pos_toko";
 $conn = mysqli_connect ($hostname, $username, $password, $db);
 
 if($conn){

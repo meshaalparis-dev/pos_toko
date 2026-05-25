@@ -1,90 +1,146 @@
 <?php
 
 include '../koneksi.php';
-$conn = $conn ?? null;
 
 if (isset($_GET['aksi'])) {
     $aksi = $_GET['aksi'];
 
-    if ($aksi == 'insert') {
-        $nama_product = $_POST['nama_product'];
-        $harga = $_POST['harga'];
-        $id_category = $_POST['id_category'];
-        $stok = $_POST['stok'];
-        $deskripsi = $_POST['deskripsi'];
-        $image = $_FILES['image_product'];
-        insertProduk($conn, $nama_product, $harga, $id_category, $filename,$stok,$deskripsi);
+    if ($aksi == 'delete') {
+        $id = $_GET['id'];
+        deleteProduk($conn, $id);
+    } else if ($aksi == 'edit') {
+        $id = $_GET['id'];
+        editProduk($id);
     } else if ($aksi == 'update') {
-    }
-    $targetfolder = 'image/produk/';
-    $filename=basename($image['name']);
-    $targetfiloefolder = $targetfolder . $filename;
-   if(move_uploaded_file($image['tmp_name'], $targetfiloefolder)){
-    echo "Gambar berhasil diupload";
-   }else{
-    echo "Gbar gagal diupload";
-   }
+        $id = $_POST['id'];
+        $nama = $_POST['nama'];
+        $stok = $_POST['stok'];
+        $harga = $_POST['harga'];
+        $image = $_FILES['image'];
+        $deskripsi = $_POST['deskripsi'];
+         if($image){
+            $targetFolder = "image/";
+            $fileName = basename($image["name"]);
+            $targetFileFolder = $targetFolder.$fileName;
 
+            if (move_uploaded_file($image['tmp_name'], $targetFileFolder)) {
+                echo"image berhasil di upload";
+            } else {
+                echo "image gagal di upload";
+            }
 
-
-}
-
-
-function readProduk($con)
-{
-    $query = 'select produk.id, produk.nama_product, produk.harga, category.nama as nama_category, produk.stok from produk join category on produk.id_category = category.id';
-    $result = $con->execute_query($query);
-    return $result;
-}
-
-function showDataCategory($con)
-{
-    $query = "select * from category";
-    $result = $con->execute_query($query);
-    return $result;
-}
-
-function insertProduk($con, $nama_product, $harga, $id_category, $filename, $stok)
-{
-    $query = "insert into produk (nama_product, harga, id_category, image_product, stok) values ('$nama_product', '$harga', '$id_category', '$image', '$stok')";
-    $result = $con->execute_query($query);
-
-    if ($result) {
-        header("Location: index.php");
-    } else {
-        echo "Data gagal diinsert";
-    }
-}
-function showDataEditProduk($con, $id)
-{
-    $query = "select * from produk where id='$id'";
-    $result = $con->execute_query($query);
-    return $result;
+            updateProduk($conn,$id, $nama, $stok, $harga, $fileName, $deskripsi);
+        }else{
+            updateProduk($conn,$id, $nama, $stok, $harga,'', $deskripsi );
+        } 
+    } else if ($aksi == 'insert') {
     
-    $stmt = $conn->prepare("SELECT * FROM produk WHERE id_produk = ?");
-    $stmt->execute([$id]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
+    $nama      = $_POST['nama_product'] ?? '';  
+    $harga     = $_POST['harga']        ?? '';
+    $deskripsi = $_POST['deskripsi']    ?? '';
+    $stok      = $_POST['stok']         ?? '';
+    $category  = $_POST['category_id']  ?? '';  
+    $image     = $_FILES['image']       ?? null;
+
+    if (!empty($image['name'])) {
+        $targetFolder = __DIR__ . "/image_produk/";
+        
+        if (!file_exists($targetFolder)) {
+            mkdir($targetFolder, 0777, true);
+        }
+
+        $filename         = basename($image['name']);
+        $targetFileFolder = $targetFolder . $filename;
+
+        if (move_uploaded_file($image['tmp_name'], $targetFileFolder)) {
+            echo "image berhasil diupload";
+        } else {
+            echo "image gagal diupload";
+        }
+
+        insertProduk($conn, $nama, $harga, $deskripsi, $filename, $stok, $category);
+    } else {
+        insertProduk($conn, $nama, $harga, $deskripsi, '', $stok, $category);
+    }
+}
 }
 
-
-function updateProduk($con, $nama_product, $harga, $id_category, $id)
+function readProduk($conn)
 {
-    $query = "update produk set nama_product ='$nama_product', harga='$harga', id_category='$id_category' where id='$id'";
-    $result = $con->execute_query($query);
+    $query = "SELECT 
+                produk.id,
+                produk.nama,
+                produk.image,
+                produk.stok,
+                produk.deskripsi,
+                category.nama AS category,
+                produk.harga
+              FROM produk
+              JOIN category
+              ON produk.id_category = category.id";
+
+    $result = $conn->execute_query($query);
+    return $result;
+}
+
+function deleteProduk($conn, $id)
+{
+    $query = "DELETE FROM produk WHERE id='$id'";
+    $result = $conn->execute_query($query);
+
     if ($result) {
         header("Location: index.php");
     } else {
-        echo "Gagal update";
+        echo "gagal";
     }
 }
 
-function deleteProduk($con, $id)
+function editProduk($id)
 {
-    $query = "delete from produk where id='$id'";
+    header("Location: edit.php?id=$id");
+}
+
+function updateProduk($conn, $id, $nama, $stok, $harga, $image, $deskripsi)
+{
+    $query = '';
+
+    if ($image == '') {
+        $query = "UPDATE produk SET  nama='$nama', stok='$stok', harga='$harga', image='$image', deskripsi='$deskripsi'  WHERE id='$id'";
+    } else {
+        $query = "UPDATE produk SET  nama='$nama', stok='$stok', harga='$harga', image='$image', deskripsi='$deskripsi'  WHERE id='$id'";
+    }
+
+    $result = $conn->execute_query($query);
+
+    if ($result) {
+        header("location: index.php");
+    } else {
+        echo "gagal";
+    }
+}
+
+function showDataEditProduk($conn, $id)
+{
+    $query = "SELECT * FROM produk WHERE id='$id'";
+    $result = $conn->execute_query($query);
+    return $result->fetch_assoc();
+}
+
+function insertProduk($con, $nama, $harga, $deskripsi, $image, $stok, $category)
+{
+    $query = "INSERT INTO produk 
+                (nama, harga, deskripsi, image, stok, id_category) 
+              VALUES 
+                ('$nama', '$harga', '$deskripsi', '$image', '$stok', '$category')";
+    
     $result = $con->execute_query($query);
+
     if ($result) {
         header("Location: index.php");
     } else {
-        echo "Gagal hapus";
+        echo "Gagal insert";
     }
 }
+
+
+?>

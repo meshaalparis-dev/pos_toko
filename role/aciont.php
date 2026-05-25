@@ -3,33 +3,42 @@
 include '../koneksi.php';
 
 if (isset($_GET['aksi'])) {
+    
+
     $aksi = $_GET['aksi'];
-
-    // Aksi yang butuh ID
-    if (in_array($aksi, ['delete', 'edit', 'update']) && isset($_GET['id'])) {
-        $id = $_GET['id'];
-
-        if ($aksi == 'delete') {
-            deleteRole($id);
-
-        } else if ($aksi == 'edit') {
-            editRole($id);
-
-        } else if ($aksi == 'update') {
-            $id   = $_POST['id'];
-            $nama = $_POST['edit_role'];
-            updateRole($conn, $nama, $id);
-        }
-    }
-
-    // Insert tidak butuh ID
     if ($aksi == 'insert') {
-        $nama = $_POST['nama'];
+        $nama = $_POST['nama_role'];
         insertRole($conn, $nama);
+    } else if ($aksi == 'edit') {
+        $id = $_GET['id'];
+        $data = showDataEditRole($conn, $id)->fetch_assoc();
+    } else if ($aksi == 'update') {
+        $id = $_POST['id'];
+        $nama = $_POST['nama'];
+        updateRole($conn, $id, $nama);
+    } else if ($aksi == 'delete') {
+        $id = $_GET['id'];
+        deleteRole($conn, $id);
     }
 }
+    
+
+
+
+
 
 // ── FUNGSI ──────────────────────────────────────
+
+// Ganti dengan file koneksi Anda
+
+
+
+function getRoleById($conn, $id) {
+    $id = mysqli_real_escape_string($conn, $id);
+    $sql = "SELECT * FROM role WHERE id = '$id'";
+    $result = mysqli_query($conn, $sql);
+    return mysqli_fetch_assoc($result);
+}
 
 function readRole($conn)
 {
@@ -57,14 +66,14 @@ function editRole($id)
     exit;
 }
 
-function updateRole($conn, $nama, $id)
+function updateRole($conn, $id, $nama)
 {
     $query  = "UPDATE role SET nama='$nama' WHERE id='$id'";
     $result = $conn->execute_query($query);
 
     if ($result) {
-        header("Location: index.php");
-        exit;
+        // header("Location: index.php");
+        // exit;
     } else {
         echo "Gagal update";
     }
@@ -87,5 +96,5 @@ function showDataEditRole($conn, $id)
 {
     $query  = "SELECT * FROM role WHERE id='$id'";
     $result = $conn->execute_query($query);
-    return $result->fetch_assoc();
+    return $result;
 }
